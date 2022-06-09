@@ -126,12 +126,3 @@ class UnoGame:
 
     def computer_turn(self):
         self.computer.print_hand()
-
-
-
-acard = Card("Blue", 1)
-print(acard)
-
-game = UnoGame(input("enter your name: "))
-game.play_game()
-
