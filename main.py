@@ -1,4 +1,4 @@
-from uno_classes import UnoGame
+from TheGame import PlayGame
 
-game = UnoGame(input("enter your name: "))
+game = PlayGame(input("enter your name: "))
 game.play_game()
