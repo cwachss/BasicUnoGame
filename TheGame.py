@@ -12,10 +12,10 @@ class PlayGame:
         first_card = self.deck.pick_card()
         self.discard = Discard(first_card)
 
-        player_hand = self.deck.deal_cards(cards_per_player=7)
+        player_hand = self.deck.deal_cards(cards_per_player=3)
         self.player = Player(self.player_name, player_hand)
 
-        computer_hand = self.deck.deal_cards(cards_per_player=7)
+        computer_hand = self.deck.deal_cards(cards_per_player=3)
         self.computer = Player("computer", computer_hand)
 
     def play_game(self):
@@ -44,26 +44,35 @@ class PlayGame:
         print(f"\ntop card: {self.discard.top_card}")
 
         # add option to pick a card from the deck
-        pick_or_play = input("would you like to play a card or pick one from the deck? (enter pick or play)")
-        if pick_or_play == "play":
+        try:
+            pick_or_play = input("would you like to play a card or pick one from the deck? (enter pick or play)")
+            if pick_or_play == "play":
 
-            try:
-                input_card_to_play = input("which card would you like to play? (enter color,number)")
-                card_details = self.input_card_to_play.split(",")
-                card_to_play = Card(self.card_details[0], int(self.card_details[1]))
+                try:
+                    self.input_card_to_play = input("which card would you like to play? (enter color,number)")
+                    self.card_details = self.input_card_to_play.split(",")
+                    self.card_to_play = Card(self.card_details[0], int(self.card_details[1]))
 
-                self.player.play_card(self.card_to_play)
-                self.discard.add_card(self.card_to_play)
+                    self.player.play_card(self.card_to_play)
+                    self.discard.add_card(self.card_to_play)
 
-            except (ValueError, IndexError) as e:
-                print("I'm sorry, you don't have that card. Please try a different one or choose to pick a card")
-                self.take_turn()
-            except AssertionError:
-                print("I'm sorry, that card does not match the top card. "
-                      "Please try a different one or choose to pick a card")
-                self.take_turn()
-        else:
-            self.player.pick_card(self.deck.pick_card())
+                except (ValueError, IndexError) as e:
+                    print("I'm sorry, you don't have that card. Please try a different one or choose to pick a card")
+                    self.take_turn()
+                except AssertionError:
+                    print("I'm sorry, that card does not match the top card. "
+                          "Please try a different one or choose to pick a card")
+                    self.take_turn()
+            else:
+                self.player.pick_card(self.deck.pick_card())
+                if self.deck.empty:
+                    self.deck.shuffle_discard(self.discard.empty_discard())
+        except AttributeError:
+            print("sorry, the deck and discard are empty- please play a card")
+            self.take_turn()
+        # this comes up when the player never plays a card and only picks.
+        #  the computer must play so it's not an issue
+
 
         print(f"{self.player.player_name}'s hand: ")
         self.player.print_hand()
@@ -79,4 +88,6 @@ class PlayGame:
                 print("computer turn over")
                 return
         self.computer.pick_card(self.deck.pick_card())
+        if self.deck.empty:
+            self.deck.shuffle_discard(self.discard.empty_discard())
         print("computer turn over")

@@ -13,7 +13,7 @@ class Player:
         if len(self.hand) == 1:
             print("Uno!")
         elif len(self.hand) == 0:
-            print(f"{self.player_name} wins!")
+            print(f"{self.player_name} is about to win!")
         return card
 
     def pick_card(self, card):
